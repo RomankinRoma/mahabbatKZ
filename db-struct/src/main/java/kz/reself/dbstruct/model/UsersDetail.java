@@ -1,19 +1,18 @@
 package kz.reself.dbstruct.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "email")
-        })
-
+@Table(name = "users_detail")
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class User {
+public class UsersDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,15 +23,6 @@ public class User {
 
     @Column(name = "last_name")
     private String lastName;
-
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "location")
     private String location;
@@ -49,4 +39,14 @@ public class User {
     @Column(name = "info")
     private String info;
 
+    @Column(name = "user_id")
+    private Long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Users users;
+
+    @OneToMany(mappedBy = "usersDetail")
+    Set<UsersDetailInterest> usersDetailInterests;
 }

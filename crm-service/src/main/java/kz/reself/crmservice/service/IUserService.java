@@ -1,8 +1,8 @@
 package kz.reself.crmservice.service;
 
-import kz.reself.dbstruct.model.User;
+import kz.reself.dbstruct.model.Users;
 
 public interface IUserService {
-    User getUserById(Long id);
-    User create(User user);
+    Users getUserById(Long id);
+    Users create(Users user);
 }
