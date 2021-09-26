@@ -1,0 +1,16 @@
+server:
+  port: 8077
+spring:
+  main.allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:5430/db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      temp:
+        use_jdbc_metadata_defaults: false
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      format_sql: true

@@ -3,7 +3,7 @@ package kz.reself.dbstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "kz.reself")
 public class DbStructApplication {
 
     public static void main(String[] args) {
