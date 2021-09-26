@@ -1,2 +1,9 @@
 server:
   port: 8085
+spring:
+  main.allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:5430/db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
