@@ -24,5 +24,6 @@
         <module>db-struct</module>
         <module>notification</module>
         <module>payment</module>
+        <module>discovery-server</module>
     </modules>
 </project>
