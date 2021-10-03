@@ -20,4 +20,9 @@ public class UserController {
     public List<Users> getUserFromAnotherClass() {
         return service.getUserDef();
     }
+
+    @GetMapping("/check")
+    public void getCheck() {
+        service.getCheck();
+    }
 }
