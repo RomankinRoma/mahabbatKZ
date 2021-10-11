@@ -1,6 +1,8 @@
 server:
   port: 8077
 spring:
+  application:
+    name: crm
   main.allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://localhost:5430/db
