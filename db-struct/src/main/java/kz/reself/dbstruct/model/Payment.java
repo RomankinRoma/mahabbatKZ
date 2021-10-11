@@ -1,7 +1,4 @@
-package kz.reself.payment.model;
-
-
-import kz.reself.dbstruct.model.Users;
+package kz.reself.dbstruct.model;
 import lombok.Data;
 
 import javax.persistence.*;
