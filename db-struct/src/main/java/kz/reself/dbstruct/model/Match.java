@@ -23,6 +23,6 @@ public class Match {
     private Long UserReceiverId;
 
     @Enumerated(EnumType.STRING)
-    private ApprovementStatus isApproved;
+    private ApprovementStatus approvementStatus;
 
 }

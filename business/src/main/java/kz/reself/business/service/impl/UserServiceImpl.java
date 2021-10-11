@@ -1,11 +1,8 @@
 package kz.reself.business.service.impl;
 
 import kz.reself.business.repository.UserRepository;
-import kz.reself.business.repository.UsersDetailRepository;
 import kz.reself.business.service.IUserService;
-import kz.reself.dbstruct.model.Interest;
 import kz.reself.dbstruct.model.Users;
-import kz.reself.dbstruct.model.UsersDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
@@ -32,9 +29,6 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Value("${spring.someString}")
-    public String check;
-
     @Override
     public Users create(Users user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -57,5 +51,10 @@ public class UserServiceImpl implements IUserService {
 
         System.out.println("instances = " + instances);
         return "ok";
+    }
+
+    @Override
+    public String getUserEmail(Long userId) {
+        return userRepository.getById(userId).getEmail();
     }
 }

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface UsersDetailRepository extends JpaRepository<UsersDetail, Long> {
+
     Optional<UsersDetail> findById(Long id);
 
     @Query(value = "SELECT ud.* FROM users_detail ud LEFT JOIN users_interests ui " +

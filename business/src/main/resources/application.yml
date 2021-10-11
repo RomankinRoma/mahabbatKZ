@@ -3,15 +3,15 @@ server:
   servlet:
     context-path: /business
 spring:
-  someString: testString
+  application:
+    name: Business
   main.allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://localhost:5430/db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-  application:
-    name: Business
+
 eureka:
   instance:
     prefer-ip-address: true

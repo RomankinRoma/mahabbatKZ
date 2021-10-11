@@ -22,7 +22,7 @@ public class UserDetailServiceImpl implements IUserDetailService {
 
     @Override
     public UsersDetail getById(Long userId) {
-        return usersDetailRepository.getById(userId);
+        return usersDetailRepository.findById(userId).get();
     }
 
     @Override
