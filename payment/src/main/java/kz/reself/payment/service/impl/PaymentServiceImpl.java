@@ -1,6 +1,6 @@
 package kz.reself.payment.service.impl;
 
-import kz.reself.dbstruct.model.Payment;
+import kz.reself.payment.model.Payment;
 import kz.reself.payment.repository.PaymentRepository;
 import kz.reself.payment.service.IPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;

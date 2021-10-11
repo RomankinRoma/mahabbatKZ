@@ -1,7 +1,7 @@
 server:
   port: 8083
   servlet:
-    context-path: payment-service
+    context-path: /payment-service
 eureka:
   instance:
     prefer-ip-address: true
@@ -11,3 +11,8 @@ eureka:
 spring:
   application:
     name: PAYMENT
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver

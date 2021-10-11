@@ -1,6 +1,6 @@
 package kz.reself.payment.controller;
 
-import kz.reself.dbstruct.model.Payment;
+import kz.reself.payment.model.Payment;
 import kz.reself.payment.service.IPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

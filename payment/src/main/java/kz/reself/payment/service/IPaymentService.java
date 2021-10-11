@@ -1,6 +1,6 @@
 package kz.reself.payment.service;
 
-import kz.reself.dbstruct.model.Payment;
+import kz.reself.payment.model.Payment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
