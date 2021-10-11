@@ -1,10 +1,12 @@
 package kz.reself.dbstruct.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import kz.reself.dbstruct.model.enam.Gender;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users",
@@ -26,7 +28,9 @@ public class Users {
     @Column(name = "password")
     private String password;
 
-    @Type(type = "kz.reself.dbstruct.mapper.CustomStringArrayType")
-    @Column(name = "roles", columnDefinition = "text[]")
-    private String[] roles;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @ManyToMany(targetEntity = Roles.class,cascade = CascadeType.ALL )
+    private List<Roles> roles;
 }

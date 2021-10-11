@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -47,6 +48,10 @@ public class UsersDetail {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Users users;
 
-    @OneToMany(mappedBy = "usersDetail")
-    Set<UsersDetailInterest> usersDetailInterests;
+    @ManyToMany
+    @JoinTable(
+            name = "users_interests",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id"))
+    List<Interest> userInterests;
 }
