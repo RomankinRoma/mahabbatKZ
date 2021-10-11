@@ -5,7 +5,5 @@ import kz.reself.dbstruct.model.UsersDetail;
 import java.util.List;
 
 public interface IUserDetailService {
-    UsersDetail create(UsersDetail usersDetail);
-    UsersDetail updateUsersDetail(UsersDetail usersDetail);
-    void deleteUsersDetailByUserId(Long userId);
+    UsersDetail getById(Long userId);
 }

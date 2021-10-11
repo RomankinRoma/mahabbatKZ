@@ -7,7 +7,7 @@ public interface IUserService {
     Users getUserById(Long id);
     Users create(Users user);
     List<Users> getAllUsers();
-    Users updateUser(Users user);
+    Users updateUser(Long id, Users user);
     void deleteUserById(Long id);
     Boolean changePassword(String email, String newPassword, String oldPassword);
     Users getByEmail(String email);
