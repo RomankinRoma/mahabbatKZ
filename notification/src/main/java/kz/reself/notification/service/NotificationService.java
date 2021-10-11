@@ -17,7 +17,6 @@ public class NotificationService {
     @Scheduled(initialDelay = 1000, fixedDelay = 600000)
     public void notificationSender() {
 
-
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);

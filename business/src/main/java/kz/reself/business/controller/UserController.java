@@ -3,18 +3,21 @@ package kz.reself.business.controller;
 import kz.reself.business.service.IUserService;
 import kz.reself.dbstruct.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/business")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private IUserService service;
+
+    @PostMapping
+    public Users create(Users user) {
+        return service.create(user);
+    }
 
     @GetMapping("/another")
     public List<Users> getUserFromAnotherClass() {

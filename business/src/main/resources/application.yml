@@ -1,5 +1,7 @@
 server:
   port: 8085
+  servlet:
+    context-path: /business
 spring:
   someString: testString
   main.allow-bean-definition-overriding: true
