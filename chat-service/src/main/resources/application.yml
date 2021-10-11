@@ -1,2 +1,11 @@
 server:
   port: 8066
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+spring:
+  application:
+    name: CHAT-SERVICE
