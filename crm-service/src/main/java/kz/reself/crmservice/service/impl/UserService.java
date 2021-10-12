@@ -1,7 +1,6 @@
 package kz.reself.crmservice.service.impl;
 
 import kz.reself.crmservice.service.IUserService;
-import kz.reself.crmservice.util.CustomEncoder;
 import kz.reself.dbstruct.model.Users;
 import kz.reself.crmservice.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
-    private final CustomEncoder customEncoder;
     @Override
     public Users getUserById(Long id) {
         return userRepository.getById(id);
@@ -48,22 +46,6 @@ public class UserService implements IUserService {
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public Boolean changePassword(String email, String newPassword, String oldPassword) {
-        Users user = userRepository.findByEmail(email);
-        if (user != null) {
-            if (user.getPassword().equals(customEncoder.encode(oldPassword))) {
-                user.setPassword(customEncoder.encode(newPassword));
-                userRepository.save(user);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 
     @Override

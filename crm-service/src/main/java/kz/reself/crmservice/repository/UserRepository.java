@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
     Users findByEmail(String email);
-    Users findByIdAndDeletedAtIsNull(Long id);
     List<Users> findAllByGender(Integer gender);
 }

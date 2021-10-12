@@ -9,7 +9,6 @@ public interface IUserService {
     List<Users> getAllUsers();
     Users updateUser(Long id, Users user);
     void deleteUserById(Long id);
-    Boolean changePassword(String email, String newPassword, String oldPassword);
     Users getByEmail(String email);
     List<Users> getByGender(Integer gender);
 }
