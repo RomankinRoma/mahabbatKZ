@@ -15,6 +15,7 @@ public class Payment {
     @JoinColumn(name = "user_id",insertable = false,updatable = false)
     private Users user;
 
+    @Column(name = "user_id")
     private Long userId;
 
     private String message;
