@@ -21,7 +21,7 @@ public class MatchServiceImpl implements IMatchService {
     public Match create(Match match) {
 
         String ans = restTemplate.getForObject
-                ("http://Notification/request/send/sender/" + match.getUserSenderId() + "/receiver/"
+                ("http://notification/request/send/sender/" + match.getUserSenderId() + "/receiver/"
                         + match.getUserReceiverId(), String.class);
 
         if (ans != null && ans.equals("Отправлено")) {
@@ -37,7 +37,7 @@ public class MatchServiceImpl implements IMatchService {
 
         String ans = "";
         if (status.equals(ApprovementStatus.ACCEPTED)) {
-            ans = restTemplate.getForObject("http://Notification/send/response/sender/"
+            ans = restTemplate.getForObject("http://notification/send/response/sender/"
                     + senderId + "/receiver/" + receiverId + "?status=" + status, String.class);
         }
         return ans;

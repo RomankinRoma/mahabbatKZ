@@ -4,7 +4,7 @@ server:
     context-path: /business
 spring:
   application:
-    name: Business
+    name: business
   main.allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://localhost:5430/db

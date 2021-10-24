@@ -1,8 +1,10 @@
 server:
   port: 8089
+  servlet:
+    context-path: /notification
 spring:
   application:
-    name: Notification
+    name: notification
   main.allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://localhost:5430/db
