@@ -1,5 +1,7 @@
 package kz.reself.notification.service.impl;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import kz.reself.dbstruct.model.UsersDetail;
 import kz.reself.dbstruct.model.enam.ApprovementStatus;
 import kz.reself.notification.service.INotificationService;
@@ -9,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
@@ -19,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class NotificationService implements INotificationService {
 
     @Autowired
@@ -29,6 +32,14 @@ public class NotificationService implements INotificationService {
     private RestTemplate restTemplate;
 
     @Override
+    @HystrixCommand(
+            fallbackMethod = "getFallBackMessage",
+            threadPoolKey = "sendRequest",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "100"),
+                    @HystrixProperty(name = "maxQueueSize", value = "50")
+            }
+    )
     public String sendRequest(Long senderId, Long receiverId) {
         UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/" + senderId, UsersDetail.class);
         String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + receiverId, String.class);
@@ -97,19 +108,7 @@ public class NotificationService implements INotificationService {
         }
     }
 
-    public void notificationSender() {
-
-        try {
-            MimeMessage message = emailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setSubject("Махаббат кейзет");
-            helper.setText("У вас коннект с ");
-            helper.setTo("nzansv@gmail.com");
-            emailSender.send(message);
-
-        } catch (MessagingException e) {
-            System.out.println(e.getLocalizedMessage());
-            e.printStackTrace();
-        }
+    public String getFallBackMessage(Long senderId, Long receiverId) {
+        return "The service is currently not available";
     }
 }
