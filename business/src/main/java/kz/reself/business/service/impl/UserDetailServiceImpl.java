@@ -27,7 +27,7 @@ public class UserDetailServiceImpl implements IUserDetailService {
 
     @Override
     public UsersDetail addInterest(Long userId, List<String> interests) {
-        UsersDetail user = usersDetailRepository.getById(userId);
+        UsersDetail user = getById(userId);
         List<Interest> interestList = new ArrayList<>();
         for (String i: interests) {
             interestList.add(interestRepository.findByName(i));
@@ -38,7 +38,7 @@ public class UserDetailServiceImpl implements IUserDetailService {
 
     @Override
     public List<UsersDetail> getRecommendList(Long udId) {
-        UsersDetail usersDetail = usersDetailRepository.getById(udId);
+        UsersDetail usersDetail = getById(udId);
         List<Interest> interests = usersDetail.getUserInterests();
         List<Long> ids = new ArrayList<>();
         for(Interest i: interests) {

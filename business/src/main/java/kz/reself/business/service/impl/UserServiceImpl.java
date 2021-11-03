@@ -55,6 +55,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public String getUserEmail(Long userId) {
-        return userRepository.getById(userId).getEmail();
+        return userRepository.findById(userId).get().getEmail();
     }
 }

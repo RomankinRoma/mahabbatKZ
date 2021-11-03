@@ -20,7 +20,7 @@ public class UserDetailService implements IUserDetailService {
 
     @Override
     public UsersDetail getById(Long userId) {
-        return usersDetailRepository.getById(userId);
+        return usersDetailRepository.findById(userId).get();
     }
 
 }

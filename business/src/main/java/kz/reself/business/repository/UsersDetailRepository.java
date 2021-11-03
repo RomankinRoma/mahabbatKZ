@@ -18,4 +18,5 @@ public interface UsersDetailRepository extends JpaRepository<UsersDetail, Long> 
             "WHERE ui.interest_id IN :ids AND ui.user_id != :id " +
             "GROUP BY id, first_name, ud.user_id", nativeQuery = true)
     List<UsersDetail> getRecommendPeople(Long id, List<Long> ids);
+
 }
