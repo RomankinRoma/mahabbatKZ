@@ -20,7 +20,7 @@ public class Match {
 
     private Long userSenderId;
 
-    private Long UserReceiverId;
+    private Long userReceiverId;
 
     @Enumerated(EnumType.STRING)
     private ApprovementStatus approvementStatus;

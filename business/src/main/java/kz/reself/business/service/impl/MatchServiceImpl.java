@@ -25,14 +25,21 @@ public class MatchServiceImpl implements IMatchService {
             threadPoolKey = "create",
             threadPoolProperties = {
                     @HystrixProperty(name = "coreSize", value = "100"),
-                    @HystrixProperty(name = "maxQueueSize", value = "50")
+                    @HystrixProperty(name = "maxQueueSize", value = "50"),
+            },
+            commandKey = "create",
+            commandProperties = {
+                    //amount of tries
+                    @HystrixProperty(name = "requestVolumeThreshold", value = "20"),
+                    // 75% from 20 (default) requests are not success
+                    @HystrixProperty(name = "errorThresholdPercentage", value = "75")
             }
     )
     public Match create(Match match) {
 
         String ans = restTemplate.getForObject
-                ("http://notification/request/send/sender/" + match.getUserSenderId() + "/receiver/"
-                        + match.getUserReceiverId(), String.class);
+                ("http://notification/notification/send/request/sender/" + match.getUserSenderId().toString() + "/receiver/"
+                        + match.getUserReceiverId().toString(), String.class);
 
         if (ans != null && ans.equals("Отправлено")) {
             match.setApprovementStatus(ApprovementStatus.WAITING);
@@ -43,6 +50,21 @@ public class MatchServiceImpl implements IMatchService {
     }
 
     @Override
+    @HystrixCommand(
+            fallbackMethod = "sendRespondFallBackMessage",
+            threadPoolKey = "sendRespond",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "100"),
+                    @HystrixProperty(name = "maxQueueSize", value = "50")
+            },
+            commandKey = "sendRespond",
+            commandProperties = {
+                    //amount of tries
+                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
+                    //time to reject after circuit
+                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
+            }
+    )
     public String sendRespond(Long senderId, Long receiverId, ApprovementStatus status) {
 
         String ans = "";
@@ -58,5 +80,10 @@ public class MatchServiceImpl implements IMatchService {
         match1.setId(0L);
         System.out.println("Notification service is not available");
         return match1;
+    }
+
+    public String sendRespondFallBackMessage(Long senderId, Long receiverId, ApprovementStatus status) {
+        System.out.println("Notification service is not available");
+        return "Notification service is not available";
     }
 }

@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class NotificationService implements INotificationService {
@@ -33,14 +32,20 @@ public class NotificationService implements INotificationService {
 
     @Override
     @HystrixCommand(
-            fallbackMethod = "getFallBackMessage",
+            fallbackMethod = "sendRequestFallback",
             threadPoolKey = "sendRequest",
             threadPoolProperties = {
                     @HystrixProperty(name = "coreSize", value = "100"),
                     @HystrixProperty(name = "maxQueueSize", value = "50")
+            },
+            commandKey = "sendRequest",
+            commandProperties = {
+                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
+                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
             }
     )
     public String sendRequest(Long senderId, Long receiverId) {
+        System.out.println("--------------WELCOME--------------");
         UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/" + senderId, UsersDetail.class);
         String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + receiverId, String.class);
 
@@ -62,6 +67,19 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
+    @HystrixCommand(
+            fallbackMethod = "sendResponseFallback",
+            threadPoolKey = "sendRequest",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "100"),
+                    @HystrixProperty(name = "maxQueueSize", value = "50")
+            },
+            commandKey = "sendRequest",
+            commandProperties = {
+                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
+                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
+            }
+    )
     public String sendResponse(Long senderId, Long receiverId, ApprovementStatus status) {
         UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/" + senderId, UsersDetail.class);
         String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + receiverId, String.class);
@@ -79,6 +97,7 @@ public class NotificationService implements INotificationService {
         } catch (MessagingException e) {
             System.out.println(e.getLocalizedMessage());
             e.printStackTrace();
+
             return e.getLocalizedMessage();
         }
     }
@@ -110,5 +129,13 @@ public class NotificationService implements INotificationService {
 
     public String getFallBackMessage(Long senderId, Long receiverId) {
         return "The service is currently not available";
+    }
+
+    public String sendRequestFallback(Long senderId, Long receiverId) {
+        return "business module is not available";
+    }
+
+    public String sendResponseFallback(Long senderId, Long receiverId, ApprovementStatus status) {
+        return "business module is not available";
     }
 }

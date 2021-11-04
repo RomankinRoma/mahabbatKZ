@@ -4,7 +4,6 @@ import kz.reself.business.repository.UserRepository;
 import kz.reself.business.service.IUserService;
 import kz.reself.dbstruct.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
