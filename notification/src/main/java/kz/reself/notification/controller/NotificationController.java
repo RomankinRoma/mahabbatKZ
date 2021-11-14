@@ -32,4 +32,10 @@ public class NotificationController {
         service.getFile(userId, response);
         return ResponseEntity.ok().build();
     }
+
+    //test
+    @GetMapping("/check/{userId}")
+    public ResponseEntity<?> test(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.getUserEmail(userId));
+    }
 }

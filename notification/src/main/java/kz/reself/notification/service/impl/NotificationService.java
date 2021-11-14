@@ -127,6 +127,12 @@ public class NotificationService implements INotificationService {
         }
     }
 
+    //test
+    @Override
+    public String getUserEmail(Long userId) {
+        return restTemplate.getForObject("http://business/business/user/email/" + userId, String.class);
+    }
+
     public String getFallBackMessage(Long senderId, Long receiverId) {
         return "The service is currently not available";
     }
