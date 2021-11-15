@@ -2,7 +2,7 @@ package kz.reself.dbstruct.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kz.reself.dbstruct.model.enam.Gender;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -14,7 +14,10 @@ import java.util.List;
                 @UniqueConstraint(columnNames = "email")
         })
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Users {
     @Id
