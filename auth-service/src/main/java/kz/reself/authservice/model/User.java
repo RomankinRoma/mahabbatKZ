@@ -30,7 +30,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToMany(targetEntity = Roles.class,cascade = CascadeType.ALL )
+    @ManyToMany(targetEntity = Roles.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Roles> roles;
 
     @Override

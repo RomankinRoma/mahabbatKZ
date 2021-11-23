@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager authManager;
+    private final AuthenticationManager authManager;
 
     private final JwtConfig jwtConfig;
 
@@ -39,21 +39,17 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
-        try {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        // 1. Get credentials from request
+//            User creds = new ObjectMapper().readValue(request.getInputStream(), User.class);
 
-            // 1. Get credentials from request
-            User creds = new ObjectMapper().readValue(request.getInputStream(), User.class);
+        // 2. Create auth object (contains credentials) which will be used by auth manager
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                username, password);
 
-            // 2. Create auth object (contains credentials) which will be used by auth manager
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    creds.getUsername(), creds.getPassword(), Collections.emptyList());
-
-            // 3. Authentication manager authenticate the user, and use UserDetialsServiceImpl::loadUserByUsername() method to load the user.
-            return authManager.authenticate(authToken);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        // 3. Authentication manager authenticate the user, and use UserDetialsServiceImpl::loadUserByUsername() method to load the user.
+        return authManager.authenticate(authToken);
     }
 
     // Upon successful authentication, generate a token.
