@@ -19,6 +19,13 @@ public class MatchServiceImpl implements IMatchService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private final Producer producer;
+
+    @Autowired
+    public MatchServiceImpl(Producer producer) {
+        this.producer = producer;
+    }
+
     @Override
     @HystrixCommand(
             fallbackMethod = "getFallBackMessage",
@@ -37,15 +44,18 @@ public class MatchServiceImpl implements IMatchService {
     )
     public Match create(Match match) {
 
-        String ans = restTemplate.getForObject
-                ("http://notification/notification/send/request/sender/" + match.getUserSenderId().toString() + "/receiver/"
-                        + match.getUserReceiverId().toString(), String.class);
+        this.producer.matchRequestNotify(match);
 
-        if (ans != null && ans.equals("Отправлено")) {
-            match.setApprovementStatus(ApprovementStatus.WAITING);
-        } else {
-            match.setApprovementStatus(ApprovementStatus.ERROR);
-        }
+//        String ans = restTemplate.getForObject
+//                ("http://notification/notification/send/request/sender/" + match.getUserSenderId().toString() + "/receiver/"
+//                        + match.getUserReceiverId().toString(), String.class);
+//
+//        if (ans != null && ans.equals("Отправлено")) {
+//            match.setApprovementStatus(ApprovementStatus.WAITING);
+//        } else {
+//            match.setApprovementStatus(ApprovementStatus.ERROR);
+//        }
+        match.setApprovementStatus(ApprovementStatus.WAITING);
         return matchRepository.save(match);
     }
 
