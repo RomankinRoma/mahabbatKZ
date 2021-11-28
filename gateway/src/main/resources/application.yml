@@ -21,3 +21,7 @@ zuul:
       path: /notification/**
       service-id: notification
       strip-prefix: false
+    auth-service:
+      path: /auth/**
+      service-id: auth-service
+      strip-prefix: false
