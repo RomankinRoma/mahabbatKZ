@@ -10,6 +10,4 @@ public interface INotificationService {
     String sendResponse(Long senderId, Long receiverId, ApprovementStatus status);
     //test
     void getFile(Long userId, HttpServletResponse response);
-    //test
-    String getUserEmail(Long userId);
 }

@@ -1,16 +1,22 @@
 package kz.reself.business.service.impl;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import kz.reself.business.repository.MatchRepository;
 import kz.reself.business.service.IMatchService;
 import kz.reself.dbstruct.model.Match;
 import kz.reself.dbstruct.model.enam.ApprovementStatus;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@DefaultProperties
 public class MatchServiceImpl implements IMatchService {
 
     @Autowired
@@ -24,6 +30,15 @@ public class MatchServiceImpl implements IMatchService {
     @Autowired
     public MatchServiceImpl(Producer producer) {
         this.producer = producer;
+    }
+
+    public static HttpEntity<String> getAuthEntity() {
+        String apiCredentials = "notification-client:p@ssword";
+        String base64Credentials = new String(Base64.encodeBase64(apiCredentials.getBytes()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic " + base64Credentials);
+        return new HttpEntity<>(headers);
     }
 
     @Override
@@ -65,22 +80,32 @@ public class MatchServiceImpl implements IMatchService {
             threadPoolKey = "sendRespond",
             threadPoolProperties = {
                     @HystrixProperty(name = "coreSize", value = "100"),
-                    @HystrixProperty(name = "maxQueueSize", value = "50")
+                    @HystrixProperty(name = "maxQueueSize", value = "50"),
             },
             commandKey = "sendRespond",
             commandProperties = {
-                    //amount of tries
-                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
-                    //time to reject after circuit
-                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000")
+//                    //amount of tries
+//                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
+//                    //time to reject after circuit
+//                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
             }
     )
     public String sendRespond(Long senderId, Long receiverId, ApprovementStatus status) {
 
         String ans = "";
         if (status.equals(ApprovementStatus.ACCEPTED)) {
-            ans = restTemplate.getForObject("http://notification/send/response/sender/"
-                    + senderId + "/receiver/" + receiverId + "?status=" + status, String.class);
+            String apiCredentials = "notification-client:p@ssword";
+            String base64Credentials = new String(Base64.encodeBase64(apiCredentials.getBytes()));
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Basic " + base64Credentials);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            ans = restTemplate.exchange("http://notification/notification/send/response/sender/"
+                    + senderId + "/receiver/" + receiverId + "?status=" + status,
+                    HttpMethod.GET, entity, String.class).getBody();
+
         }
         return ans;
     }

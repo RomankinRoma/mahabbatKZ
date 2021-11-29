@@ -1,16 +1,21 @@
 package kz.reself.notification.service.impl;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import kz.reself.dbstruct.model.UsersDetail;
 import kz.reself.dbstruct.model.enam.ApprovementStatus;
+import kz.reself.notification.repository.UserRepository;
+import kz.reself.notification.repository.UsersDetailRepository;
 import kz.reself.notification.service.INotificationService;
 import net.sf.jasperreports.engine.*;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,13 +27,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@DefaultProperties
 public class NotificationService implements INotificationService {
 
     @Autowired
     private JavaMailSender emailSender;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private UsersDetailRepository usersDetailRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     @HystrixCommand(
@@ -46,9 +56,9 @@ public class NotificationService implements INotificationService {
     )
     public String sendRequest(Long senderId, Long receiverId) {
         System.out.println("--------------WELCOME--------------");
-        UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/" + senderId, UsersDetail.class);
-        String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + receiverId, String.class);
 
+        UsersDetail sender = usersDetailRepository.findById(senderId).get();
+        String receiverEmail = userRepository.findById(receiverId).get().getEmail();
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -67,22 +77,23 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    @HystrixCommand(
-            fallbackMethod = "sendResponseFallback",
-            threadPoolKey = "sendRequest",
-            threadPoolProperties = {
-                    @HystrixProperty(name = "coreSize", value = "100"),
-                    @HystrixProperty(name = "maxQueueSize", value = "50")
-            },
-            commandKey = "sendRequest",
-            commandProperties = {
-                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
-                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
-            }
-    )
+//    @HystrixCommand(
+//            fallbackMethod = "sendResponseFallback",
+//            threadPoolKey = "sendRespond",
+//            threadPoolProperties = {
+//                    @HystrixProperty(name = "coreSize", value = "100"),
+//                    @HystrixProperty(name = "maxQueueSize", value = "50")
+//            },
+//            commandKey = "sendRespond"
+////            commandProperties = {
+////                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
+////                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
+////            }
+//    )
     public String sendResponse(Long senderId, Long receiverId, ApprovementStatus status) {
-        UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/" + senderId, UsersDetail.class);
-        String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + receiverId, String.class);
+
+        UsersDetail sender = usersDetailRepository.findById(senderId).get();
+        String receiverEmail = userRepository.findById(receiverId).get().getEmail();
 
         try {
             MimeMessage message = emailSender.createMimeMessage();
@@ -127,11 +138,6 @@ public class NotificationService implements INotificationService {
         }
     }
 
-    //test
-    @Override
-    public String getUserEmail(Long userId) {
-        return restTemplate.getForObject("http://business/business/user/email/" + userId, String.class);
-    }
 
     public String getFallBackMessage(Long senderId, Long receiverId) {
         return "The service is currently not available";

@@ -25,3 +25,10 @@ management:
 hystrix:
   dashboard:
     proxy-stream-allow-list: '*'
+  command:
+    sendRespond:
+      circuitBreaker:
+        requestVolumeThreshold: 30
+    default:
+      circuitBreaker:
+        sleepWindowInMilliseconds: 4000
