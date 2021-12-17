@@ -48,14 +48,14 @@ public class MatchServiceImpl implements IMatchService {
             threadPoolProperties = {
                     @HystrixProperty(name = "coreSize", value = "100"),
                     @HystrixProperty(name = "maxQueueSize", value = "50"),
+            },
+            commandKey = "create",
+            commandProperties = {
+//                    amount of tries
+                    @HystrixProperty(name = "requestVolumeThreshold", value = "20"),
+//                     75% from 20 (default) requests are not success
+                    @HystrixProperty(name = "errorThresholdPercentage", value = "75")
             }
-//            commandKey = "create",
-//            commandProperties = {
-                    //amount of tries
-//                    @HystrixProperty(name = "requestVolumeThreshold", value = "20"),
-                    // 75% from 20 (default) requests are not success
-//                    @HystrixProperty(name = "errorThresholdPercentage", value = "75")
-//            }
     )
     public Match create(Match match) {
 
@@ -84,11 +84,11 @@ public class MatchServiceImpl implements IMatchService {
             },
             commandKey = "sendRespond",
             commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000"),
 //                    //amount of tries
-//                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
+                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
 //                    //time to reject after circuit
-//                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
+                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
             }
     )
     public String sendRespond(Long senderId, Long receiverId, ApprovementStatus status) {

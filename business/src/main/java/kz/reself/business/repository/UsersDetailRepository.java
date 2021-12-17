@@ -13,10 +13,12 @@ public interface UsersDetailRepository extends JpaRepository<UsersDetail, Long> 
 
     Optional<UsersDetail> findById(Long id);
 
+    UsersDetail getByUserId(Long id);
+
     @Query(value = "SELECT ud.* FROM users_detail ud LEFT JOIN users_interests ui " +
             "ON ud.id = ui.user_id " +
-            "WHERE ui.interest_id IN :ids AND ui.user_id != :id " +
+            "WHERE ui.interest_id IN :ids AND ui.user_id != :id AND ud.gender != :gender " +
             "GROUP BY id, first_name, ud.user_id", nativeQuery = true)
-    List<UsersDetail> getRecommendPeople(Long id, List<Long> ids);
+    List<UsersDetail> getRecommendPeople(Long id, List<Long> ids, String gender);
 
 }

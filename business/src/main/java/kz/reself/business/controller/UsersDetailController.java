@@ -27,8 +27,8 @@ public class UsersDetailController {
         return service.addInterest(userId, interests);
     }
 
-    @GetMapping("/recommend/{udId}")
-    public List<UsersDetail> getRecommendationList(@PathVariable Long udId) {
-        return service.getRecommendList(udId);
+    @GetMapping("/recommend/{userId}")
+    public List<UsersDetail> getRecommendationList(@PathVariable Long userId) {
+        return service.getRecommendList(userId);
     }
 }

@@ -1,9 +1,11 @@
 package kz.reself.business.service.impl;
 
 import kz.reself.business.repository.InterestRepository;
+import kz.reself.business.repository.UserRepository;
 import kz.reself.business.repository.UsersDetailRepository;
 import kz.reself.business.service.IUserDetailService;
 import kz.reself.dbstruct.model.Interest;
+import kz.reself.dbstruct.model.Users;
 import kz.reself.dbstruct.model.UsersDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class UserDetailServiceImpl implements IUserDetailService {
 
     @Autowired
     private UsersDetailRepository usersDetailRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private InterestRepository interestRepository;
@@ -37,14 +42,14 @@ public class UserDetailServiceImpl implements IUserDetailService {
     }
 
     @Override
-    public List<UsersDetail> getRecommendList(Long udId) {
-        UsersDetail usersDetail = getById(udId);
+    public List<UsersDetail> getRecommendList(Long userId) {
+        UsersDetail usersDetail = usersDetailRepository.getByUserId(userId);
         List<Interest> interests = usersDetail.getUserInterests();
         List<Long> ids = new ArrayList<>();
         for(Interest i: interests) {
             ids.add(i.getId());
         }
 
-        return usersDetailRepository.getRecommendPeople(udId, ids);
+        return usersDetailRepository.getRecommendPeople(userId, ids, usersDetail.getGender());
     }
 }
