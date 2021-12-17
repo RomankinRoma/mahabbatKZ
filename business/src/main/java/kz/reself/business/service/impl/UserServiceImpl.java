@@ -2,6 +2,7 @@ package kz.reself.business.service.impl;
 
 import kz.reself.business.repository.UserRepository;
 import kz.reself.business.service.IUserService;
+import kz.reself.dbstruct.model.Roles;
 import kz.reself.dbstruct.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -31,6 +32,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Users create(Users user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        List<Roles> roles = new ArrayList<>();
+        roles.add(new Roles(2L, "USER_ROLE"));
+        user.setRoles(roles);
         return userRepository.save(user);
     }
 

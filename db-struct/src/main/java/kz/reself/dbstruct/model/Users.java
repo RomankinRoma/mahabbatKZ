@@ -36,4 +36,7 @@ public class Users {
 
     @ManyToMany(targetEntity = Roles.class,cascade = CascadeType.ALL )
     private List<Roles> roles;
+
+    @ManyToMany(targetEntity = Event.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Event> events;
 }

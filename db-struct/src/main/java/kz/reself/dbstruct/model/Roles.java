@@ -1,7 +1,7 @@
 package kz.reself.dbstruct.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +11,9 @@ import java.util.List;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "name")
         })
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Roles {
     @Id
@@ -24,4 +26,9 @@ public class Roles {
 
     @ManyToMany(targetEntity = Users.class, mappedBy = "roles", cascade = CascadeType.ALL)
     private List<Users> users;
+
+    public Roles(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
