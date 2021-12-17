@@ -25,7 +25,7 @@ public class Consumer {
     public void consume(Match match) {
         UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/" + match.getUserSenderId(), UsersDetail.class);
         String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + match.getUserReceiverId(), String.class);
-
+        System.out.println("Kafka works!");
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);

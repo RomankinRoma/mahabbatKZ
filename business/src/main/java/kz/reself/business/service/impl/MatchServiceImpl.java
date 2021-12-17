@@ -48,14 +48,14 @@ public class MatchServiceImpl implements IMatchService {
             threadPoolProperties = {
                     @HystrixProperty(name = "coreSize", value = "100"),
                     @HystrixProperty(name = "maxQueueSize", value = "50"),
-            },
-            commandKey = "create",
-            commandProperties = {
-                    //amount of tries
-                    @HystrixProperty(name = "requestVolumeThreshold", value = "20"),
-                    // 75% from 20 (default) requests are not success
-                    @HystrixProperty(name = "errorThresholdPercentage", value = "75")
             }
+//            commandKey = "create",
+//            commandProperties = {
+                    //amount of tries
+//                    @HystrixProperty(name = "requestVolumeThreshold", value = "20"),
+                    // 75% from 20 (default) requests are not success
+//                    @HystrixProperty(name = "errorThresholdPercentage", value = "75")
+//            }
     )
     public Match create(Match match) {
 

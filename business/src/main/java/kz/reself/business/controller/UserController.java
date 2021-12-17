@@ -29,7 +29,7 @@ public class UserController {
         return service.getUserDef();
     }
 
-    @GetMapping("/check")
+    @GetMapping("/checkInstances")
     public void getCheck() {
         service.getCheck();
     }
