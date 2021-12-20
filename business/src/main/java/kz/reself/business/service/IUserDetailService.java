@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface IUserDetailService {
 
+    UsersDetail addFullInfo(UsersDetail usersDetail, String email);
+
     UsersDetail getById(Long userId);
 
     UsersDetail addInterest(Long userId, List<String> interests);

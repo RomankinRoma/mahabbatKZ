@@ -16,6 +16,12 @@ public class UsersDetailController {
     @Autowired
     private IUserDetailService service;
 
+
+    @PostMapping
+    public UsersDetail addFullInfo(@RequestBody UsersDetail usersDetail, @RequestParam String email) {
+        return this.service.addFullInfo(usersDetail, email);
+    }
+
     @GetMapping("/{userId}")
     public UsersDetail getById(@PathVariable Long userId) {
         return service.getById(userId);

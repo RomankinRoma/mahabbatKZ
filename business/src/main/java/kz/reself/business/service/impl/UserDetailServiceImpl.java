@@ -26,6 +26,14 @@ public class UserDetailServiceImpl implements IUserDetailService {
     private InterestRepository interestRepository;
 
     @Override
+    public UsersDetail addFullInfo(UsersDetail usersDetail, String email) {
+        Users user = this.userRepository.findByEmail(email);
+        usersDetail.setUsers(user);
+        usersDetail.setUserId(user.getId());
+        return this.usersDetailRepository.save(usersDetail);
+    }
+
+    @Override
     public UsersDetail getById(Long userId) {
         return usersDetailRepository.findById(userId).get();
     }
