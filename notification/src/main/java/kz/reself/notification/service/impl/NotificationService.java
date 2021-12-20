@@ -3,6 +3,7 @@ package kz.reself.notification.service.impl;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import kz.reself.dbstruct.model.Users;
 import kz.reself.dbstruct.model.UsersDetail;
 import kz.reself.dbstruct.model.enam.ApprovementStatus;
 import kz.reself.notification.repository.UserRepository;
@@ -90,9 +91,9 @@ public class NotificationService implements INotificationService {
 ////                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
 ////            }
 //    )
-    public String sendResponse(Long senderId, Long receiverId, ApprovementStatus status) {
-
-        UsersDetail sender = usersDetailRepository.findById(senderId).get();
+    public String sendResponse(String senderEmail, Long receiverId, ApprovementStatus status) {
+        Long userId = this.userRepository.findByEmail(senderEmail).getId();
+        UsersDetail sender = usersDetailRepository.findByUserId(userId);
         String receiverEmail = userRepository.findById(receiverId).get().getEmail();
 
         try {

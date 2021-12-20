@@ -21,9 +21,9 @@ public class NotificationController {
         return service.sendRequest(senderId, receiverId);
     }
 
-    @GetMapping("/response/sender/{senderId}/receiver/{receiverId}")
-    public String sendResponse(@PathVariable Long senderId, @PathVariable Long receiverId, @RequestParam ApprovementStatus status) {
-        return service.sendResponse(senderId, receiverId, status);
+    @GetMapping("/response/sender/{senderEmail}/receiver/{receiverId}")
+    public String sendResponse(@PathVariable String senderEmail, @PathVariable Long receiverId, @RequestParam ApprovementStatus status) {
+        return service.sendResponse(senderEmail, receiverId, status);
     }
 
     //test

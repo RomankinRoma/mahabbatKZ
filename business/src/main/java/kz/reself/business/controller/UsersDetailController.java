@@ -22,6 +22,11 @@ public class UsersDetailController {
         return this.service.addFullInfo(usersDetail, email);
     }
 
+    @GetMapping("/byEmail/{email}")
+    public UsersDetail getByEmail(@PathVariable String email) {
+        return this.service.getDetailByEmail(email);
+    }
+
     @GetMapping("/{userId}")
     public UsersDetail getById(@PathVariable Long userId) {
         return service.getById(userId);

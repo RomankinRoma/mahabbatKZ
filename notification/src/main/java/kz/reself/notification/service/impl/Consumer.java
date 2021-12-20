@@ -23,8 +23,8 @@ public class Consumer {
 
     @KafkaListener(topics = "match_requests", groupId = "group_id")
     public void consume(Match match) {
-        UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/" + match.getUserSenderId(), UsersDetail.class);
-        String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + match.getUserReceiverId(), String.class);
+        UsersDetail sender = restTemplate.getForObject("http://business/business/user-detail/byEmail/" + match.getSenderEmail(), UsersDetail.class);
+        String receiverEmail = restTemplate.getForObject("http://business/business/user/email/" + match.getReceiverId(), String.class);
         System.out.println("Kafka works!");
         try {
             MimeMessage message = emailSender.createMimeMessage();
@@ -33,7 +33,6 @@ public class Consumer {
             helper.setText("Вы нравитесь " + sender.getFirstName() + "у");
             helper.setTo(receiverEmail);
             emailSender.send(message);
-
 
         } catch (MessagingException e) {
             System.out.println(e.getLocalizedMessage());

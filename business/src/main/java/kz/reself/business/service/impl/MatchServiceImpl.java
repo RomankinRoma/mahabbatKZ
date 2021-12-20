@@ -4,8 +4,11 @@ import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import kz.reself.business.repository.MatchRepository;
+import kz.reself.business.repository.UserRepository;
+import kz.reself.business.repository.UsersDetailRepository;
 import kz.reself.business.service.IMatchService;
 import kz.reself.dbstruct.model.Match;
+import kz.reself.dbstruct.model.UsersDetail;
 import kz.reself.dbstruct.model.enam.ApprovementStatus;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +18,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @DefaultProperties
 public class MatchServiceImpl implements IMatchService {
 
     @Autowired
     private MatchRepository matchRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UsersDetailRepository usersDetailRepository;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -91,7 +103,7 @@ public class MatchServiceImpl implements IMatchService {
                     @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
             }
     )
-    public String sendRespond(Long senderId, Long receiverId, ApprovementStatus status) {
+    public String sendRespond(String senderEmail, Long receiverId, ApprovementStatus status) {
 
         String ans = "";
         if (status.equals(ApprovementStatus.ACCEPTED)) {
@@ -103,11 +115,23 @@ public class MatchServiceImpl implements IMatchService {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ans = restTemplate.exchange("http://notification/notification/send/response/sender/"
-                    + senderId + "/receiver/" + receiverId + "?status=" + status,
+                    + senderEmail + "/receiver/" + receiverId + "?status=" + status,
                     HttpMethod.GET, entity, String.class).getBody();
 
         }
         return ans;
+    }
+
+    @Override
+    public List<UsersDetail> getRequestsFromUsers(String email) {
+        Long userId = this.userRepository.findByEmail(email).getId();
+        List<UsersDetail> usersList = new ArrayList<>();
+        List<Match> matches = this.matchRepository.findAllByReceiverId(userId);
+        for (Match match: matches) {
+            Long senderId = this.userRepository.findByEmail(match.getSenderEmail()).getId();
+            usersList.add(this.usersDetailRepository.getByUserId(senderId));
+        }
+        return usersList;
     }
 
     public Match getFallBackMessage(Match match) {

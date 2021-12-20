@@ -60,4 +60,10 @@ public class UserDetailServiceImpl implements IUserDetailService {
 
         return usersDetailRepository.getRecommendPeople(userId, ids, usersDetail.getGender());
     }
+
+    @Override
+    public UsersDetail getDetailByEmail(String email) {
+        Long userId = this.userRepository.findByEmail(email).getId();
+        return this.usersDetailRepository.getByUserId(userId);
+    }
 }

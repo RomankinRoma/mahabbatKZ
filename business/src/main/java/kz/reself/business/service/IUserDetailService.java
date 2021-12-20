@@ -14,4 +14,6 @@ public interface IUserDetailService {
     UsersDetail addInterest(Long userId, List<String> interests);
 
     List<UsersDetail> getRecommendList(Long userId);
+
+    UsersDetail getDetailByEmail(String email);
 }

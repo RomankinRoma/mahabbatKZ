@@ -18,9 +18,9 @@ public class Match {
     @Column(name = "id")
     private Long id;
 
-    private Long userSenderId;
+    private String senderEmail;
 
-    private Long userReceiverId;
+    private Long receiverId;
 
     @Enumerated(EnumType.STRING)
     private ApprovementStatus approvementStatus;
