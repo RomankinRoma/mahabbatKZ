@@ -14,6 +14,7 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
+
     @Override
     public Users getUserById(Long id) {
         return userRepository.findById(id).get();

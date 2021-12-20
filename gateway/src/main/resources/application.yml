@@ -21,6 +21,14 @@ zuul:
       path: /notification/**
       service-id: notification
       strip-prefix: false
+    crm:
+      path: /crm/**
+      service-id: crm
+      strip-prefix: false
+    event:
+      path: /event/**
+      service-id: event
+      strip-prefix: false
     auth-service:
       path: /auth/**
       service-id: auth-service

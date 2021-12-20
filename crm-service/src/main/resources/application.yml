@@ -16,3 +16,9 @@ spring:
 #        use_jdbc_metadata_defaults: false
 #      dialect: org.hibernate.dialect.PostgreSQLDialect
 #      format_sql: true
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://127.0.0.1:8761/eureka/}
