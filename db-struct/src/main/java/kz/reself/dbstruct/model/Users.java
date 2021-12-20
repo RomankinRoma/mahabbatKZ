@@ -34,9 +34,9 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToMany(targetEntity = Roles.class,cascade = CascadeType.ALL )
+    @ManyToMany(targetEntity = Roles.class,cascade = CascadeType.PERSIST)
     private List<Roles> roles;
 
-    @ManyToMany(targetEntity = Event.class,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Event.class,cascade = CascadeType.PERSIST)
     private List<Event> events;
 }

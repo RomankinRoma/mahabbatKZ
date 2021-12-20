@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,13 +23,15 @@ public class Event {
     private String name;
 
     @Column
-    private String desc;
+    private String description;
 
     @Column
     private Date eventDate;
 
-    @JsonIgnore
-    @ManyToMany(targetEntity = Users.class, mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Users> users;
+    @Column
+    private Integer freeSeatsAmount;
 
+    @JsonIgnore
+    @ManyToMany(targetEntity = Users.class, mappedBy = "events", cascade = CascadeType.PERSIST)
+    private List<Users> users;
 }

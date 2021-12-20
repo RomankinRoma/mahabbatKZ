@@ -1,1 +1,19 @@
-
+server:
+  port: 8022
+  servlet:
+    context-path: /event
+spring:
+  application:
+    name: event
+  main.allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:5430/db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://127.0.0.1:8761/eureka/}

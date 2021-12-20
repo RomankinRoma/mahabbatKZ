@@ -1,5 +1,6 @@
 package kz.reself.business.service.impl;
 
+import kz.reself.business.repository.RoleRepository;
 import kz.reself.business.repository.UserRepository;
 import kz.reself.business.service.IUserService;
 import kz.reself.dbstruct.model.Roles;
@@ -29,11 +30,15 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public Users create(Users user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Roles role = this.roleRepository.findById(2L).get();
         List<Roles> roles = new ArrayList<>();
-        roles.add(new Roles(2L, "USER_ROLE"));
+        roles.add(role);
         user.setRoles(roles);
         return userRepository.save(user);
     }

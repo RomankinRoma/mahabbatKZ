@@ -1,5 +1,6 @@
 package kz.reself.dbstruct.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -24,11 +25,8 @@ public class Roles {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(targetEntity = Users.class, mappedBy = "roles", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ManyToMany(targetEntity = Users.class, mappedBy = "roles", cascade = CascadeType.PERSIST)
     private List<Users> users;
 
-    public Roles(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }
