@@ -1,6 +1,7 @@
 package kz.reself.business.controller;
 
 import kz.reself.business.service.IUserDetailService;
+import kz.reself.business.service.impl.UserServiceImpl;
 import kz.reself.dbstruct.model.Interest;
 import kz.reself.dbstruct.model.UsersDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class UsersDetailController {
     @Autowired
     private IUserDetailService service;
 
+    @Autowired
+    private UserServiceImpl userService;
 
     @PostMapping
     public UsersDetail addFullInfo(@RequestBody UsersDetail usersDetail, @RequestParam String email) {
@@ -41,5 +44,15 @@ public class UsersDetailController {
     @GetMapping("/recommend/{userId}")
     public List<UsersDetail> getRecommendationList(@PathVariable Long userId) {
         return service.getRecommendList(userId);
+    }
+
+    @GetMapping("/id/{email}")
+    public Long getUserId(@PathVariable String email) {
+        return userService.getUserIdByEmail(email);
+    }
+
+    @GetMapping("/recommend-email/{email}")
+    public List<UsersDetail> getRecommendationListByEmail(@PathVariable String email) {
+        return service.getRecommendListByEmail(email);
     }
 }

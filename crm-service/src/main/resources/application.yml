@@ -22,3 +22,18 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_URL:http://127.0.0.1:8761/eureka/}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: '*'
+  command:
+    sendRespond:
+      circuitBreaker:
+        requestVolumeThreshold: 30
+  default:
+    circuitBreaker:
+      sleepWindowInMilliseconds: 4000

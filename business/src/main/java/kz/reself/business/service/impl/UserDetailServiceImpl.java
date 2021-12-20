@@ -23,6 +23,9 @@ public class UserDetailServiceImpl implements IUserDetailService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
     private InterestRepository interestRepository;
 
     @Override
@@ -57,7 +60,6 @@ public class UserDetailServiceImpl implements IUserDetailService {
         for(Interest i: interests) {
             ids.add(i.getId());
         }
-
         return usersDetailRepository.getRecommendPeople(userId, ids, usersDetail.getGender());
     }
 
@@ -65,5 +67,16 @@ public class UserDetailServiceImpl implements IUserDetailService {
     public UsersDetail getDetailByEmail(String email) {
         Long userId = this.userRepository.findByEmail(email).getId();
         return this.usersDetailRepository.getByUserId(userId);
+    }
+
+    @Override
+    public List<UsersDetail> getRecommendListByEmail(String email) {
+        UsersDetail usersDetail = usersDetailRepository.getByUserId(userService.getUserIdByEmail(email));
+        List<Interest> interests = usersDetail.getUserInterests();
+        List<Long> ids = new ArrayList<>();
+        for(Interest i: interests) {
+            ids.add(i.getId());
+        }
+        return usersDetailRepository.getRecommendPeople(userService.getUserIdByEmail(email), ids, usersDetail.getGender());
     }
 }

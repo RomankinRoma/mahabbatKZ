@@ -9,6 +9,6 @@ public interface IUserService {
     Users create(Users user);
     List<Users> getUserDef();
     String getCheck();
-
+    Long getUserIdByEmail(String email);
     String getUserEmail(Long userId);
 }

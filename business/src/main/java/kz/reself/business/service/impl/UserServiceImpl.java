@@ -44,6 +44,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public Long getUserIdByEmail(String email) {
+        Users user = userRepository.findByEmail(email);
+        return user.getId();
+    }
+
+    @Override
     public List<Users> getUserDef() {
         List<Users> users = new ArrayList<>();
         Users user = restTemplate.getForObject("http://crm/user/1", Users.class);
