@@ -39,6 +39,9 @@ public class UsersDetail {
     @Column(name = "info")
     private String info;
 
+    @Column(name = "report_counter")
+    private Integer reportCounter;
+
     @Column(name = "user_id")
     private Long userId;
 
