@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: storage-service
+  minio:
+    bucket: ${MINIO_BUCKET:mahabbatKz}
+    accessKey: ${MINIO_ACCESS_KEY:mahabbatKz}
+    secretKey: ${MINIO_SECRET_KEY:mahabbatKz}
+    url: ${MINIO_URL:http://localhost:443}
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://127.0.0.1:8761/eureka/}

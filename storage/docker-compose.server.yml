@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  minio:
+    image: minio/minio
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "4443:4443"
+    volumes:
+      - minio-volume
+      - /tmp/.minio:/root/.minio
+    environment:
+      - "MINIO_ACCESS_KEY=mahabbatKz"
+      - "MINIO_SECRET_KEY=mahabbatKz"
+    command: server --address ":443" --console-address ":4443" /data
+
