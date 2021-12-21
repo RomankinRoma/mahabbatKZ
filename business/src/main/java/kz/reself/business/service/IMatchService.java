@@ -12,4 +12,6 @@ public interface IMatchService {
     String sendRespond(String email, Long receiverId, ApprovementStatus status);
 
     List<UsersDetail> getRequestsFromUsers(String email);
+
+    List<UsersDetail> getMatchers(String email);
 }

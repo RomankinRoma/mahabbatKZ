@@ -31,4 +31,9 @@ public class MatchController {
         return this.service.getRequestsFromUsers(email);
     }
 
+    @GetMapping("/myMatches/{email}")
+    public List<UsersDetail> getMyMatches(@PathVariable String email) {
+        return this.service.getMatchers(email);
+    }
+
 }

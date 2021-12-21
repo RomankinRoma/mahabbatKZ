@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserDetailServiceImpl implements IUserDetailService {
@@ -78,5 +79,18 @@ public class UserDetailServiceImpl implements IUserDetailService {
             ids.add(i.getId());
         }
         return usersDetailRepository.getRecommendPeople(userService.getUserIdByEmail(email), ids, usersDetail.getGender());
+    }
+
+    @Override
+    public List<UsersDetail> getUsersDetailByFilter(Map<String, String> params) {
+        List<UsersDetail> resultList = new ArrayList<>();
+        if (params.containsKey("gender") && params.containsKey("location")) {
+            resultList = this.usersDetailRepository.getAllByLocationAndGender(params.get("location"), params.get("gender"));
+        } else if (params.containsKey("gender")) {
+            resultList = this.usersDetailRepository.getAllByGender(params.get("gender"));
+        } else if (params.containsKey("location")) {
+            resultList = this.usersDetailRepository.getAllByLocation(params.get("location"));
+        }
+        return resultList;
     }
 }

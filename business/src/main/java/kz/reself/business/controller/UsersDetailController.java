@@ -1,5 +1,6 @@
 package kz.reself.business.controller;
 
+import kz.reself.business.repository.UsersDetailRepository;
 import kz.reself.business.service.IUserDetailService;
 import kz.reself.business.service.impl.UserServiceImpl;
 import kz.reself.dbstruct.model.Interest;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user-detail")
@@ -16,6 +18,9 @@ public class UsersDetailController {
 
     @Autowired
     private IUserDetailService service;
+
+    @Autowired
+    private UsersDetailRepository usersDetailRepository;
 
     @Autowired
     private UserServiceImpl userService;
@@ -44,6 +49,11 @@ public class UsersDetailController {
     @GetMapping("/recommend/{userId}")
     public List<UsersDetail> getRecommendationList(@PathVariable Long userId) {
         return service.getRecommendList(userId);
+    }
+
+    @GetMapping("/loc-gen")
+    public List<UsersDetail> getRecommendationList(@RequestParam Map<String, String> param) {
+        return service.getUsersDetailByFilter(param);
     }
 
     @GetMapping("/id/{email}")

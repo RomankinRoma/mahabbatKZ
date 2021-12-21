@@ -4,6 +4,7 @@ import kz.reself.dbstruct.model.Interest;
 import kz.reself.dbstruct.model.UsersDetail;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IUserDetailService {
 
@@ -18,4 +19,6 @@ public interface IUserDetailService {
     UsersDetail getDetailByEmail(String email);
 
     List<UsersDetail> getRecommendListByEmail(String email);
+
+    List<UsersDetail> getUsersDetailByFilter(Map<String, String> param);
 }

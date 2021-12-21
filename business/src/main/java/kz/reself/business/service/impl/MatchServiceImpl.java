@@ -60,14 +60,14 @@ public class MatchServiceImpl implements IMatchService {
             threadPoolProperties = {
                     @HystrixProperty(name = "coreSize", value = "100"),
                     @HystrixProperty(name = "maxQueueSize", value = "50"),
-            },
-            commandKey = "create",
-            commandProperties = {
-//                    amount of tries
-                    @HystrixProperty(name = "requestVolumeThreshold", value = "20"),
-//                     75% from 20 (default) requests are not success
-                    @HystrixProperty(name = "errorThresholdPercentage", value = "75")
             }
+//            commandKey = "create",
+//            commandProperties = {
+////                    amount of tries
+//                    @HystrixProperty(name = "requestVolumeThreshold", value = "20"),
+////                     75% from 20 (default) requests are not success
+//                    @HystrixProperty(name = "errorThresholdPercentage", value = "75")
+//            }
     )
     public Match create(Match match) {
 
@@ -87,22 +87,18 @@ public class MatchServiceImpl implements IMatchService {
     }
 
     @Override
-    @HystrixCommand(
-            fallbackMethod = "sendRespondFallBackMessage",
-            threadPoolKey = "sendRespond",
-            threadPoolProperties = {
-                    @HystrixProperty(name = "coreSize", value = "100"),
-                    @HystrixProperty(name = "maxQueueSize", value = "50"),
-            },
-            commandKey = "sendRespond",
-            commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "4000"),
-//                    //amount of tries
-                    @HystrixProperty(name = "requestVolumeThreshold", value = "30"),
-//                    //time to reject after circuit
-                    @HystrixProperty(name = "sleepWindowInMilliseconds", value = "4000")
-            }
-    )
+//    @HystrixCommand(
+//            fallbackMethod = "sendRespondFallBackMessage",
+//            threadPoolKey = "sendRespond",
+//            threadPoolProperties = {
+//                    @HystrixProperty(name = "coreSize", value = "100"),
+//                    @HystrixProperty(name = "maxQueueSize", value = "50"),
+//            },
+//            commandKey = "sendRespond",
+//            commandProperties = {
+//                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "10000")
+//            }
+//    )
     public String sendRespond(String senderEmail, Long receiverId, ApprovementStatus status) {
 
         String ans = "";
@@ -115,8 +111,14 @@ public class MatchServiceImpl implements IMatchService {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             ans = restTemplate.exchange("http://notification/notification/send/response/sender/"
-                    + senderEmail + "/receiver/" + receiverId + "?status=" + status,
+                            + senderEmail + "/receiver/" + receiverId + "?status=" + status,
                     HttpMethod.GET, entity, String.class).getBody();
+
+            if (ans.equals("Отправлено")) {
+                Match match = this.matchRepository.findBySenderEmailAndReceiverIdAndApprovementStatus(senderEmail, receiverId, ApprovementStatus.WAITING);
+                match.setApprovementStatus(ApprovementStatus.ACCEPTED);
+                this.matchRepository.save(match);
+            }
 
         }
         return ans;
@@ -126,8 +128,20 @@ public class MatchServiceImpl implements IMatchService {
     public List<UsersDetail> getRequestsFromUsers(String email) {
         Long userId = this.userRepository.findByEmail(email).getId();
         List<UsersDetail> usersList = new ArrayList<>();
-        List<Match> matches = this.matchRepository.findAllByReceiverId(userId);
-        for (Match match: matches) {
+        List<Match> matches = this.matchRepository.findAllByReceiverIdAndApprovementStatus(userId, ApprovementStatus.WAITING);
+        for (Match match : matches) {
+            Long senderId = this.userRepository.findByEmail(match.getSenderEmail()).getId();
+            usersList.add(this.usersDetailRepository.getByUserId(senderId));
+        }
+        return usersList;
+    }
+
+    @Override
+    public List<UsersDetail> getMatchers(String email) {
+        Long userId = this.userRepository.findByEmail(email).getId();
+        List<UsersDetail> usersList = new ArrayList<>();
+        List<Match> matches = this.matchRepository.findAllByReceiverIdAndApprovementStatus(userId, ApprovementStatus.ACCEPTED);
+        for (Match match : matches) {
             Long senderId = this.userRepository.findByEmail(match.getSenderEmail()).getId();
             usersList.add(this.usersDetailRepository.getByUserId(senderId));
         }
@@ -141,7 +155,7 @@ public class MatchServiceImpl implements IMatchService {
         return match1;
     }
 
-    public String sendRespondFallBackMessage(Long senderId, Long receiverId, ApprovementStatus status) {
+    public String sendRespondFallBackMessage(String email, Long receiverId, ApprovementStatus status) {
         System.out.println("Notification service is not available");
         return "Notification service is not available";
     }
